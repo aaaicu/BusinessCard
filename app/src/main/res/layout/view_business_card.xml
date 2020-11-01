@@ -1,0 +1,184 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/businessCard"
+    android:layout_width="700dp"
+    android:layout_height="400dp"
+    android:padding="30dp"
+    android:background="#F1FBFF"
+    android:orientation="vertical">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <ImageView
+            android:id="@+id/imageViewMainLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:mipmap/sym_def_app_icon" />
+
+        <ImageView
+            android:id="@+id/imageViewSubLogo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@android:mipmap/sym_def_app_icon" />
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="박  재  현"
+            android:textSize="30sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/imageViewSubLogo" />
+
+        <TextView
+            android:id="@+id/textViewTeamName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:text="전략SI팀"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewName"
+            app:layout_constraintLeft_toRightOf="@id/textViewName"
+            app:layout_constraintStart_toEndOf="@+id/textViewName"
+            app:layout_constraintTop_toTopOf="@+id/textViewName" />
+
+        <TextView
+            android:id="@+id/textViewPosition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginLeft="8dp"
+            android:text="사원"
+            app:layout_constraintBottom_toBottomOf="@+id/textViewName"
+            app:layout_constraintStart_toEndOf="@+id/textViewTeamName"
+            app:layout_constraintTop_toTopOf="@+id/textViewName" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/body"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1">
+
+        <LinearLayout
+            android:id="@+id/address"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/textViewCompanyName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="티시스"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewName"
+                app:layout_constraintLeft_toRightOf="@id/textViewName"
+                app:layout_constraintTop_toTopOf="@id/textViewName" />
+
+            <TextView
+                android:id="@+id/textViewCompanyAddress"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0101010 ssssssssssssssss"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewName"
+                app:layout_constraintLeft_toRightOf="@id/textViewName"
+                app:layout_constraintTop_toTopOf="@id/textViewName" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contactsCol1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/address">
+
+            <TextView
+                android:id="@+id/textViewTel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="T. 070 8188 0886"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewName"
+                app:layout_constraintLeft_toRightOf="@id/textViewName"
+                app:layout_constraintTop_toTopOf="@id/textViewName" />
+
+            <TextView
+                android:id="@+id/textViewMobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="M. 010 9636 9654"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewName"
+                app:layout_constraintLeft_toRightOf="@id/textViewName"
+                app:layout_constraintTop_toTopOf="@id/textViewName" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/contactsCol2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:orientation="vertical"
+            app:layout_constraintStart_toEndOf="@+id/contactsCol1"
+            app:layout_constraintTop_toTopOf="@+id/contactsCol1">
+
+            <TextView
+                android:id="@+id/textViewFax"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="F. 070 8188 0886"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewName"
+                app:layout_constraintLeft_toRightOf="@id/textViewName"
+                app:layout_constraintTop_toTopOf="@id/textViewName" />
+
+            <TextView
+                android:id="@+id/textViewEmail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="E. aaaaaa@nmaaaa.com"
+                android:textSize="15sp"
+                app:layout_constraintBottom_toBottomOf="@id/textViewName"
+                app:layout_constraintLeft_toRightOf="@id/textViewName"
+                app:layout_constraintTop_toTopOf="@id/textViewName" />
+
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/footer"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.6">
+
+        <TextView
+            android:id="@+id/textViewHomepage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="www.tsis.co.kr"
+            android:textSize="15sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</LinearLayout>
