@@ -25,13 +25,6 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
     }
 
-        public Bitmap getBitmapFromView(View v){
-        Bitmap b = Bitmap.createBitmap(v.getWidth(), v.getHeight() , Bitmap.Config.ARGB_8888);
-        Canvas c = new Canvas(b);
-         v.draw(c);
-         return b;
-    }
-
     public void openEditBusinessCardActivity(View view) {
 
         Intent intent = new Intent(this,BusinessCardEditActivity.class);

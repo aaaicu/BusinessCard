@@ -3,8 +3,10 @@ package com.jaehyun.businesscard.database.entity;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 @Entity(tableName = "business_card")
-public class BusinessCardEntity {
+public class BusinessCardEntity implements Serializable {
     @PrimaryKey(autoGenerate = true)
     int id;
 
@@ -78,5 +80,19 @@ public class BusinessCardEntity {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    @Override
+    public String toString() {
+        return "BusinessCardEntity{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", tel='" + tel + '\'' +
+                ", mobile='" + mobile + '\'' +
+                ", team='" + team + '\'' +
+                ", position='" + position + '\'' +
+                ", address='" + address + '\'' +
+                '}';
     }
 }

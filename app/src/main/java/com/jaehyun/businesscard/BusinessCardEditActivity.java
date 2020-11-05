@@ -39,6 +39,7 @@ public class BusinessCardEditActivity extends AppCompatActivity {
     public void getBusinessCardActivity(View view) {
 
         BusinessCardEntity entity =  new BusinessCardEntity();
+        entity.setId(1);
         entity.setName(editTextName.getText().toString());
         entity.setAddress(editTextAddress.getText().toString());
         entity.setEmail(editTextEmail.getText().toString());
@@ -47,7 +48,10 @@ public class BusinessCardEditActivity extends AppCompatActivity {
         entity.setTeam(editTextTeam.getText().toString());
         entity.setPosition(editTextPosition.getText().toString());
 
-        databaseThread = new Thread(() -> BusinessCardApplication.getDatabase().businessCardDao().insertBusinessCard(entity));
+        databaseThread = new Thread(() -> {
+            BusinessCardApplication.getDatabase().businessCardDao().deleteBusinessCard(entity);
+            BusinessCardApplication.getDatabase().businessCardDao().insertBusinessCard(entity);
+        });
         databaseThread.start();
 
         Intent intent = new Intent(this,BusinessCardActivity.class);

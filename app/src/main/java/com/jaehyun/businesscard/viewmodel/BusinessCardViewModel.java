@@ -4,25 +4,23 @@ import android.app.Application;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
-import androidx.lifecycle.LiveData;
+import androidx.lifecycle.MutableLiveData;
 
 import com.jaehyun.businesscard.database.entity.BusinessCardEntity;
 
 public class BusinessCardViewModel extends AndroidViewModel {
-    private LiveData<BusinessCardEntity> mEntity;
+    private MutableLiveData<BusinessCardEntity> mEntity;
 
     public BusinessCardViewModel(@NonNull Application application) {
         super(application);
-
-
     }
 
-    public LiveData<BusinessCardEntity> getEntity() {
+    public MutableLiveData<BusinessCardEntity> getEntity() {
 
         return mEntity;
     }
 
-    public void setEntity(LiveData<BusinessCardEntity> mEntity) {
+    public void setEntity(MutableLiveData<BusinessCardEntity> mEntity) {
         this.mEntity = mEntity;
     }
 }
