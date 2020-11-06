@@ -48,11 +48,8 @@ public class BusinessCardEditActivity extends AppCompatActivity {
         entity.setTeam(editTextTeam.getText().toString());
         entity.setPosition(editTextPosition.getText().toString());
 
-        databaseThread = new Thread(() -> {
-            BusinessCardApplication.getDatabase().businessCardDao().deleteBusinessCard(entity);
-            BusinessCardApplication.getDatabase().businessCardDao().insertBusinessCard(entity);
-        });
-        databaseThread.start();
+        BusinessCardApplication.getDatabase().businessCardDao().deleteBusinessCard(entity);
+        BusinessCardApplication.getDatabase().businessCardDao().insertBusinessCard(entity);
 
         Intent intent = new Intent(this,BusinessCardActivity.class);
         startActivity(intent);
