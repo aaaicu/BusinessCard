@@ -3,6 +3,7 @@
     package="com.jaehyun.businesscard">
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
         android:name=".BusinessCardApplication"
@@ -11,7 +12,9 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/AppTheme">
+        android:theme="@style/AppTheme"
+        android:networkSecurityConfig="@xml/network_security_config"
+        >
         <activity android:name=".BusinessCardActivity"/>
 <!--            android:screenOrientation="landscape"></activity>-->
         <activity android:name=".BusinessCardEditActivity" />

@@ -17,6 +17,7 @@ public class BusinessCardEntity implements Serializable {
     private String team;
     private String position;
     private String address;
+    private String setFax;
 
     public int getId() {
         return id;
@@ -82,6 +83,14 @@ public class BusinessCardEntity implements Serializable {
         this.address = address;
     }
 
+    public String getSetFax() {
+        return setFax;
+    }
+
+    public void setSetFax(String setFax) {
+        this.setFax = setFax;
+    }
+
     @Override
     public String toString() {
         return "BusinessCardEntity{" +
@@ -93,6 +102,7 @@ public class BusinessCardEntity implements Serializable {
                 ", team='" + team + '\'' +
                 ", position='" + position + '\'' +
                 ", address='" + address + '\'' +
+                ", setFax='" + setFax + '\'' +
                 '}';
     }
 }
