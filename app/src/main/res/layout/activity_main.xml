@@ -20,7 +20,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/editTextEmpSeq"
+        android:id="@+id/editTextEmpId"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -40,8 +40,8 @@
         android:layout_marginLeft="16dp"
         android:onClick="requestBusinessCard"
         android:text="명함 제작(서버연동)"
-        app:layout_constraintStart_toEndOf="@+id/editTextEmpSeq"
-        app:layout_constraintTop_toTopOf="@+id/editTextEmpSeq" />
+        app:layout_constraintStart_toEndOf="@+id/editTextEmpId"
+        app:layout_constraintTop_toTopOf="@+id/editTextEmpId" />
 
     <View
         android:id="@+id/divider"

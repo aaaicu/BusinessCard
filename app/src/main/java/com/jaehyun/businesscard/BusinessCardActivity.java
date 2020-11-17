@@ -78,25 +78,26 @@ public class BusinessCardActivity extends AppCompatActivity {
             if (getIntent().getStringExtra("REQ") != null ){
                 if (getIntent().getStringExtra("REQ").equals("server") ){
                     Log.d("test", "서버로 이미지 저장 요청" );
+                    Log.d("test", getIntent().getIntExtra("ID",-1) + "" );
                     File temp = saveBitmapToPng(bitmap,"BusinessCard");
-                    EmployeeRepository.getInstance().saveBusinessCardImage(1,temp).enqueue(new Callback<String>() {
-                        @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
-                            Log.d("test", "성공" + response.body());
 
-                            temp.delete();
-                        }
+                    EmployeeRepository.getInstance()
+                            .saveBusinessCardImage(getIntent().getIntExtra("ID",-1),temp)
+                            .enqueue(new Callback<String>() {
+                                @Override
+                                public void onResponse(Call<String> call, Response<String> response) {
+                                    temp.delete();
+                                }
 
-                        @Override
-                        public void onFailure(Call<String> call, Throwable t) {
-                            Log.d("test", "실패 " + t.getMessage() );
-                            temp.delete();
-                        }
-                    });
+                                @Override
+                                public void onFailure(Call<String> call, Throwable t) {
+                                    temp.delete();
+                                }
+                            });
                 }
             }
         });
-        observeRoomDB();
+        observeRoomDB(getIntent().getIntExtra("ID",-1));
     }
 
 
@@ -125,11 +126,10 @@ public class BusinessCardActivity extends AppCompatActivity {
         }
     }
 
-    private void observeRoomDB(){
-        int tempId = 1;
+    private void observeRoomDB(int empId){
         BusinessCardApplication.getDatabase()
                 .businessCardDao()
-                .getBusinessCard(tempId)
+                .getBusinessCard(empId)
                 .observe(this, businessCardEntity -> {
                     if (businessCardEntity != null){
                         Log.d("test", "관찰 테스트" + businessCardEntity.toString());

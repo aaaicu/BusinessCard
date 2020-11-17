@@ -6,6 +6,7 @@ import com.jaehyun.businesscard.model.BusinessCardModel;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
+import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
 import retrofit2.http.Multipart;
@@ -21,7 +22,8 @@ public interface BusinessCardService {
     @Multipart
     @POST("/employee/businesscard")
     Call<String> saveBusinessCardImage(
-            @Part MultipartBody.Part seq,
-            @Part MultipartBody.Part file);
+            @Part MultipartBody.Part seq ,
+            @Part MultipartBody.Part file
+    );
 
 }
