@@ -3,6 +3,7 @@ package com.jaehyun.businesscard;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatViewInflater;
 import androidx.core.content.FileProvider;
 import androidx.lifecycle.LiveData;
 import androidx.lifecycle.MutableLiveData;
@@ -22,14 +23,20 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.jaehyun.businesscard.database.entity.BusinessCardEntity;
 import com.jaehyun.businesscard.model.BusinessCardModel;
+import com.jaehyun.businesscard.model.SendBusinessCardModel;
 import com.jaehyun.businesscard.network.repository.EmployeeRepository;
+import com.jaehyun.businesscard.util.Config;
 import com.jaehyun.businesscard.view.BusinessCardView;
 import com.jaehyun.businesscard.viewmodel.BusinessCardViewModel;
 
@@ -62,31 +69,38 @@ public class BusinessCardActivity extends AppCompatActivity {
         setContentView(R.layout.activity_business_card);
         checkPermission();
 
-        businessCardView = findViewById(R.id.businessCardView);
         imageView = findViewById(R.id.imageView);
 
         businessCardViewModel = new BusinessCardViewModel(getApplication());
         businessCardViewModel.setEntity(new MutableLiveData<>());
+
         data = businessCardViewModel.getEntity();
 
-        data.observe(this, businessCardEntity ->{
-            businessCardView.setBusinessCardData(businessCardEntity);
+        data.observe(this, e -> {
+            businessCardView = findViewById(R.id.businessCardView);
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException ex) {
+                ex.printStackTrace();
+            }
+
+            businessCardView.setBusinessCardData(e);
             Bitmap bitmap = getBitmapFromView(businessCardView);
-            imageView.setImageBitmap(bitmap);
 
             // 서버로 이미지 전달
             if (getIntent().getStringExtra("REQ") != null ){
                 if (getIntent().getStringExtra("REQ").equals("server") ){
                     Log.d("test", "서버로 이미지 저장 요청" );
-                    Log.d("test", getIntent().getIntExtra("ID",-1) + "" );
+                    Log.d("test", getIntent().getStringExtra("ID") + "" );
                     File temp = saveBitmapToPng(bitmap,"BusinessCard");
 
                     EmployeeRepository.getInstance()
-                            .saveBusinessCardImage(getIntent().getIntExtra("ID",-1),temp)
+                            .saveBusinessCardImage(getIntent().getStringExtra("ID"),temp)
                             .enqueue(new Callback<String>() {
                                 @Override
                                 public void onResponse(Call<String> call, Response<String> response) {
                                     temp.delete();
+                                    getBusinessCardImage();
                                 }
 
                                 @Override
@@ -97,9 +111,69 @@ public class BusinessCardActivity extends AppCompatActivity {
                 }
             }
         });
-        observeRoomDB(getIntent().getIntExtra("ID",-1));
+
+        BusinessCardEntity entity  = new BusinessCardEntity();
+        EmployeeRepository.getInstance().hasBusinessCard(getIntent().getStringExtra("ID")).enqueue(new Callback<String>() {
+            @Override
+            public void onResponse(Call<String> call, Response<String> response) {
+                if (response.body().equals("false")) {
+                    // 명함 이미지가 없는 경우
+
+                    // 데이터 가져오기
+                    EmployeeRepository.getInstance().getBusinessCardInfo(getIntent().getStringExtra("ID"))
+                            .enqueue(new Callback<BusinessCardModel>() {
+                                @Override
+                                public void onResponse(Call<BusinessCardModel> call, Response<BusinessCardModel> response) {
+                                    BusinessCardModel model = response.body();
+
+                                    if(model != null){
+                                        entity.setId(model.getSeq());
+                                        entity.setName(model.getName());
+                                        entity.setAddress(model.getAddress());
+                                        entity.setEmail(model.getEmail());
+                                        entity.setTel(model.getTel());
+                                        entity.setMobile(model.getPhone());
+                                        entity.setTeam(model.getTeam());
+                                        entity.setPosition(model.getPosition());
+                                        entity.setSetFax(model.getFax());
+                                        Log.d("test",entity.toString()+"");
+
+                                        data.setValue(entity);
+                                    }
+                                }
+
+                                @Override
+                                public void onFailure(Call<BusinessCardModel> call, Throwable t) {
+                                    Log.d("test",t.toString());
+                                }
+                    });
+                }else {
+                    getBusinessCardImage();
+                }
+                // 명함 이미지가 있는 경우
+            }
+
+            @Override
+            public void onFailure(Call<String> call, Throwable t) {
+                    Log.d("test",t.toString());
+            }
+        });
     }
 
+    public void getBusinessCardImage(){
+        // 메서드 생성 예정
+        if (getIntent().getStringExtra("REQ") != null ) {
+            if (getIntent().getStringExtra("REQ").equals("server")) {
+                Glide.with(getApplicationContext())
+                        .load(Config.BASE_URL + Config.BUSINESS_CARD_URL + getIntent().getStringExtra("ID") )
+                        .apply(new RequestOptions()
+                                .skipMemoryCache(true)
+                                .diskCacheStrategy(DiskCacheStrategy.NONE))
+                        .into(imageView);
+                Log.d("test", Config.BASE_URL + Config.BUSINESS_CARD_URL + getIntent().getStringExtra("ID"));
+            }
+        }
+    }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
@@ -214,5 +288,28 @@ public class BusinessCardActivity extends AppCompatActivity {
                 requestPermissions(permission_list,0);
             }
         }
+    }
+
+    public void test(View view) {
+        View temp = findViewById(R.id.businessCard);
+        Log.d("test",temp.getWidth()+"");
+        Log.d("test",temp.getHeight()+"");
+        SendBusinessCardModel model = new SendBusinessCardModel();
+        model.setContent("내용");
+        model.setReceiver("받는이");
+        model.setSender(Integer.parseInt(getIntent().getStringExtra("ID")));
+        model.setSendType("kakao");
+
+//        EmployeeRepository.getInstance().sendBusinessCard(model).enqueue(new Callback<String>() {
+//            @Override
+//            public void onResponse(Call<String> call, Response<String> response) {
+//
+//            }
+//
+//            @Override
+//            public void onFailure(Call<String> call, Throwable t) {
+//
+//            }
+//        });
     }
 }

@@ -3,6 +3,7 @@ package com.jaehyun.businesscard.network.service;
 import android.graphics.Bitmap;
 
 import com.jaehyun.businesscard.model.BusinessCardModel;
+import com.jaehyun.businesscard.model.SendBusinessCardModel;
 
 import okhttp3.MultipartBody;
 import retrofit2.Call;
@@ -19,11 +20,16 @@ public interface BusinessCardService {
     @GET("/employee/info")
     Call<BusinessCardModel> getEmployeeBySeq(@Query("seq") String param);
 
+    @GET("/employee/hasBusinessCard")
+    Call<String> hasBusinessCard(@Query("seq") String seq);
+
     @Multipart
-    @POST("/employee/businesscard")
+    @POST("/employee/businessCard")
     Call<String> saveBusinessCardImage(
             @Part MultipartBody.Part seq ,
             @Part MultipartBody.Part file
     );
 
+    @POST("/send/businessCard")
+    Call<String> sendBusinessCard(@Body SendBusinessCardModel request);
 }
