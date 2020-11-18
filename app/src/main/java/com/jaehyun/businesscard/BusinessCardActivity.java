@@ -16,6 +16,7 @@ import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -95,7 +96,7 @@ public class BusinessCardActivity extends AppCompatActivity {
                     File temp = saveBitmapToPng(bitmap,"BusinessCard");
 
                     EmployeeRepository.getInstance()
-                            .saveBusinessCardImage(getIntent().getStringExtra("ID"),temp)
+                            .saveBusinessCardImage(getApplicationContext(), getIntent().getStringExtra("ID"),temp)
                             .enqueue(new Callback<String>() {
                                 @Override
                                 public void onResponse(Call<String> call, Response<String> response) {
@@ -113,14 +114,14 @@ public class BusinessCardActivity extends AppCompatActivity {
         });
 
         BusinessCardEntity entity  = new BusinessCardEntity();
-        EmployeeRepository.getInstance().hasBusinessCard(getIntent().getStringExtra("ID")).enqueue(new Callback<String>() {
+        EmployeeRepository.getInstance().hasBusinessCard(getApplicationContext(), getIntent().getStringExtra("ID")).enqueue(new Callback<String>() {
             @Override
             public void onResponse(Call<String> call, Response<String> response) {
                 if (response.body().equals("false")) {
                     // 명함 이미지가 없는 경우
 
                     // 데이터 가져오기
-                    EmployeeRepository.getInstance().getBusinessCardInfo(getIntent().getStringExtra("ID"))
+                    EmployeeRepository.getInstance().getBusinessCardInfo(getApplicationContext(), getIntent().getStringExtra("ID"))
                             .enqueue(new Callback<BusinessCardModel>() {
                                 @Override
                                 public void onResponse(Call<BusinessCardModel> call, Response<BusinessCardModel> response) {
@@ -200,18 +201,6 @@ public class BusinessCardActivity extends AppCompatActivity {
         }
     }
 
-    private void observeRoomDB(int empId){
-        BusinessCardApplication.getDatabase()
-                .businessCardDao()
-                .getBusinessCard(empId)
-                .observe(this, businessCardEntity -> {
-                    if (businessCardEntity != null){
-                        Log.d("test", "관찰 테스트" + businessCardEntity.toString());
-                        data.setValue(businessCardEntity);
-                    }
-        });
-    }
-
     public Bitmap getBitmapFromView(View v){
         if(bitmap == null){
             View temp = findViewById(R.id.businessCard);
@@ -241,9 +230,10 @@ public class BusinessCardActivity extends AppCompatActivity {
     }
 
     public void sendBusinessCard(View view) {
-
-        saveBitmapToPng(bitmap,"BusinessCard");
-        sendMMS(getUri(tempFile));
+        if (imageView != null){
+            saveBitmapToPng(((BitmapDrawable) imageView.getDrawable()).getBitmap(),"BusinessCard");
+            sendMMS(getUri(tempFile));
+        }
     }
 
     private void sendMMS(Uri uri) {
@@ -290,26 +280,36 @@ public class BusinessCardActivity extends AppCompatActivity {
         }
     }
 
-    public void test(View view) {
-        View temp = findViewById(R.id.businessCard);
-        Log.d("test",temp.getWidth()+"");
-        Log.d("test",temp.getHeight()+"");
+    public void requestSend(View view) {
         SendBusinessCardModel model = new SendBusinessCardModel();
         model.setContent("내용");
         model.setReceiver("받는이");
         model.setSender(Integer.parseInt(getIntent().getStringExtra("ID")));
         model.setSendType("kakao");
 
-//        EmployeeRepository.getInstance().sendBusinessCard(model).enqueue(new Callback<String>() {
-//            @Override
-//            public void onResponse(Call<String> call, Response<String> response) {
-//
-//            }
-//
-//            @Override
-//            public void onFailure(Call<String> call, Throwable t) {
-//
-//            }
-//        });
+        EmployeeRepository.getInstance().sendBusinessCard(getApplicationContext(), model).enqueue(new Callback<Void>() {
+            @Override
+            public void onResponse(Call<Void> call, Response<Void> response) {
+                Toast.makeText(getApplicationContext(),"메시지 요청 완료", Toast.LENGTH_SHORT).show();
+            }
+            @Override
+            public void onFailure(Call<Void> call, Throwable t) {
+
+            }
+        });
     }
+
+
+
+//    private void observeRoomDB(int empId){
+//        BusinessCardApplication.getDatabase()
+//                .businessCardDao()
+//                .getBusinessCard(empId)
+//                .observe(this, businessCardEntity -> {
+//                    if (businessCardEntity != null){
+//                        Log.d("test", "관찰 테스트" + businessCardEntity.toString());
+//                        data.setValue(businessCardEntity);
+//                    }
+//        });
+//    }
 }

@@ -14,8 +14,8 @@
         android:layout_marginStart="26dp"
         android:layout_marginLeft="26dp"
         android:layout_marginTop="60dp"
-        android:onClick="openEditBusinessCardActivity"
-        android:text="직접 명함 제작"
+        android:clickable="false"
+        android:text="직접 명함 제작(비활성화)"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 

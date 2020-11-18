@@ -10,6 +10,7 @@ import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
 import retrofit2.http.GET;
+import retrofit2.http.HTTP;
 import retrofit2.http.Multipart;
 import retrofit2.http.POST;
 import retrofit2.http.Part;
@@ -29,7 +30,6 @@ public interface BusinessCardService {
             @Part MultipartBody.Part seq ,
             @Part MultipartBody.Part file
     );
-
-    @POST("/send/businessCard")
-    Call<String> sendBusinessCard(@Body SendBusinessCardModel request);
+    @HTTP(method = "POST", path = "/send/businessCard", hasBody = true)
+    Call<Void> sendBusinessCard(@Body SendBusinessCardModel requestModel);
 }

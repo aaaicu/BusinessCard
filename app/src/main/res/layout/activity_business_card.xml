@@ -40,7 +40,7 @@
         android:id="@+id/buttonRequestMessage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:onClick="test"
+        android:onClick="requestSend"
         android:text="메시지 전송 요청"
         app:layout_constraintBottom_toTopOf="@+id/buttonNext"
         app:layout_constraintEnd_toEndOf="parent" />

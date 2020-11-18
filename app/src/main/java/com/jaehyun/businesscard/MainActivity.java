@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public void requestBusinessCard(View view) {
         if(editTextId.getText().toString() != null ){
 
-            EmployeeRepository.getInstance().getBusinessCardInfo(editTextId.getText().toString()).enqueue(new Callback<BusinessCardModel>(){
+            EmployeeRepository.getInstance().getBusinessCardInfo(this, editTextId.getText().toString()).enqueue(new Callback<BusinessCardModel>(){
 
                 @Override
                 public void onResponse(Call<BusinessCardModel> call, Response<BusinessCardModel> response) {
@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity {
 
                 @Override
                 public void onFailure(Call<BusinessCardModel> call, Throwable t) {
-
+                    Log.d("test", t.toString());
                 }
             });
 
