@@ -22,6 +22,7 @@ public class BusinessCardView extends LinearLayout {
     TextView team = null;
     TextView position = null;
     TextView address = null;
+    TextView fax = null;
 
     public BusinessCardView(Context context) {
         super(context);
@@ -53,9 +54,8 @@ public class BusinessCardView extends LinearLayout {
         team = card.findViewById(R.id.textViewTeamName);
         position = card.findViewById(R.id.textViewPosition);
         address = card.findViewById(R.id.textViewCompanyAddress);
+        fax = card.findViewById(R.id.textViewFax);
 
-//        setScaleX(0.5f);
-//        setScaleY(0.5f);
         addView(card);
     }
 
@@ -67,6 +67,7 @@ public class BusinessCardView extends LinearLayout {
         team.setText(e.getTeam());
         position.setText(e.getPosition());
         address.setText(e.getAddress());
+        fax.setText(e.getFax());
         return card;
     }
 

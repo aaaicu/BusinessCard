@@ -136,7 +136,7 @@ public class BusinessCardActivity extends AppCompatActivity {
                                         entity.setMobile(model.getPhone());
                                         entity.setTeam(model.getTeam());
                                         entity.setPosition(model.getPosition());
-                                        entity.setSetFax(model.getFax());
+                                        entity.setFax(model.getFax());
                                         Log.d("test",entity.toString()+"");
 
                                         data.setValue(entity);
