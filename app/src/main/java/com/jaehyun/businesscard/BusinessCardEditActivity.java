@@ -20,8 +20,6 @@ public class BusinessCardEditActivity extends AppCompatActivity {
     private EditText editTextPosition;
     private EditText editTextAddress;
 
-    Thread databaseThread;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

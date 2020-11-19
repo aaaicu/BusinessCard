@@ -9,11 +9,6 @@ import com.jaehyun.businesscard.network.service.BusinessCardService;
 import com.jaehyun.businesscard.util.Config;
 
 import java.io.File;
-import java.security.KeyStore;
-import java.security.SecureRandom;
-
-import javax.net.ssl.SSLContext;
-import javax.net.ssl.TrustManagerFactory;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;

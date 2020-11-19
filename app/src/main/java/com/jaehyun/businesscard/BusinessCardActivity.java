@@ -71,20 +71,15 @@ public class BusinessCardActivity extends AppCompatActivity {
         checkPermission();
 
         imageView = findViewById(R.id.imageView);
+        businessCardView = findViewById(R.id.businessCardView);
 
         businessCardViewModel = new BusinessCardViewModel(getApplication());
         businessCardViewModel.setEntity(new MutableLiveData<>());
 
         data = businessCardViewModel.getEntity();
 
-        data.observe(this, e -> {
-            businessCardView = findViewById(R.id.businessCardView);
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException ex) {
-                ex.printStackTrace();
-            }
 
+        data.observe(this, e -> {
             businessCardView.setBusinessCardData(e);
             Bitmap bitmap = getBitmapFromView(businessCardView);
 
@@ -162,7 +157,6 @@ public class BusinessCardActivity extends AppCompatActivity {
     }
 
     public void getBusinessCardImage(){
-        // 메서드 생성 예정
         if (getIntent().getStringExtra("REQ") != null ) {
             if (getIntent().getStringExtra("REQ").equals("server")) {
                 Glide.with(getApplicationContext())

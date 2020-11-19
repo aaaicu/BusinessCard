@@ -16,9 +16,7 @@ import java.security.cert.CertificateException;
 import java.security.cert.CertificateFactory;
 import java.security.cert.X509Certificate;
 
-import javax.net.ssl.HostnameVerifier;
 import javax.net.ssl.SSLContext;
-import javax.net.ssl.SSLSession;
 import javax.net.ssl.TrustManagerFactory;
 import javax.net.ssl.X509TrustManager;
 
@@ -28,11 +26,10 @@ public class SelfSigningClientBuilder {
 
     public static OkHttpClient.Builder addBuilder(Context context, OkHttpClient.Builder okHttpClientBuilder) {
 
-        CertificateFactory cf = null;
-        InputStream cert = null;
-        Certificate ca = null;
-        SSLContext sslContext = null;
-        InputStream caInput = null;
+        CertificateFactory cf;
+        Certificate ca;
+        SSLContext sslContext;
+        InputStream caInput;
         try {
             cf = CertificateFactory.getInstance("X.509");
             caInput = context.getResources().openRawResource(R.raw.my_cert);
@@ -43,7 +40,6 @@ public class SelfSigningClientBuilder {
             // Create a KeyStore containing our trusted CAs
             String keyStoreType = KeyStore.getDefaultType();
             KeyStore keyStore = KeyStore.getInstance(keyStoreType);
-
             keyStore.load(null,null);
             keyStore.setCertificateEntry("ca", ca);
 
@@ -58,7 +54,7 @@ public class SelfSigningClientBuilder {
             sslContext.init(null, tmf.getTrustManagers(), null);
 
             okHttpClientBuilder = okHttpClientBuilder
-                    .sslSocketFactory(sslContext.getSocketFactory());
+                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) tmf.getTrustManagers()[0]);
 
             okHttpClientBuilder.hostnameVerifier((hostname, session) -> {
                 if (hostname.contentEquals("10.0.2.2")) {
