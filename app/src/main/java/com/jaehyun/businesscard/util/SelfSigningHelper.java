@@ -1,8 +1,8 @@
 package com.jaehyun.businesscard.util;
 
-import android.content.Context;
 import android.util.Log;
 
+import com.jaehyun.businesscard.BusinessCardApplication;
 import com.jaehyun.businesscard.R;
 
 import java.io.IOException;
@@ -22,17 +22,32 @@ import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 
-public class SelfSigningClientBuilder {
+public class SelfSigningHelper {
+    private SSLContext sslContext;
+    private TrustManagerFactory tmf;
 
-    public static OkHttpClient.Builder addBuilder(Context context, OkHttpClient.Builder okHttpClientBuilder) {
+    private SelfSigningHelper() {
+        setUp();
+    }
+
+    private static class SelfSigningClientBuilderHolder{
+
+        public static final SelfSigningHelper INSTANCE = new SelfSigningHelper();
+    }
+
+    public static SelfSigningHelper getInstance() {
+        return SelfSigningClientBuilderHolder.INSTANCE;
+    }
+
+    public void setUp() {
 
         CertificateFactory cf;
         Certificate ca;
-        SSLContext sslContext;
+
         InputStream caInput;
         try {
             cf = CertificateFactory.getInstance("X.509");
-            caInput = context.getResources().openRawResource(R.raw.my_cert);
+            caInput = BusinessCardApplication.getAppContext().getResources().openRawResource(R.raw.my_cert);
 
             ca = cf.generateCertificate(caInput);
             System.out.println("ca=" + ((X509Certificate) ca).getSubjectDN());
@@ -45,32 +60,40 @@ public class SelfSigningClientBuilder {
 
             // Create a TrustManager that trusts the CAs in our KeyStore
             String tmfAlgorithm = TrustManagerFactory.getDefaultAlgorithm();
-            TrustManagerFactory tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
+            tmf = TrustManagerFactory.getInstance(tmfAlgorithm);
             tmf.init(keyStore);
 
 
             // Create an SSLContext that uses our TrustManager
             sslContext = SSLContext.getInstance("TLS");
-            sslContext.init(null, tmf.getTrustManagers(), null);
-
-            okHttpClientBuilder = okHttpClientBuilder
-                    .sslSocketFactory(sslContext.getSocketFactory(), (X509TrustManager) tmf.getTrustManagers()[0]);
-
-            okHttpClientBuilder.hostnameVerifier((hostname, session) -> {
-                if (hostname.contentEquals("10.0.2.2")) {
-                    Log.d("test", "Approving certificate for host " + hostname);
-                    return true;
-                }else {
-                    Log.d("test", "fail " + hostname);
-                    return false;
-                }
-            });
+            sslContext.init(null, tmf.getTrustManagers(), new java.security.SecureRandom());
 
             caInput.close();
         } catch (KeyStoreException | CertificateException | NoSuchAlgorithmException | IOException | KeyManagementException e) {
             e.printStackTrace();
         }
-        return okHttpClientBuilder;
     }
 
+    public OkHttpClient.Builder setSSLOkHttp(OkHttpClient.Builder builder,String target){
+
+        builder.sslSocketFactory(getInstance().sslContext.getSocketFactory(), (X509TrustManager)getInstance().tmf.getTrustManagers()[0]);
+        builder.hostnameVerifier((hostname, session) -> {
+            if (hostname.contentEquals(target)) {
+                Log.d("test", "Approving certificate for host " + hostname);
+                return true;
+            }else {
+                Log.d("test", "fail " + hostname);
+                return false;
+            }
+        });
+        return builder;
+    }
+
+    public SSLContext getSslContext() {
+        return sslContext;
+    }
+
+    public TrustManagerFactory getTmf() {
+        return tmf;
+    }
 }

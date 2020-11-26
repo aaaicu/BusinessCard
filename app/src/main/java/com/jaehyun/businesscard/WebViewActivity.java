@@ -1,33 +1,43 @@
 package com.jaehyun.businesscard;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.os.Build;
 import android.os.Bundle;
-import android.webkit.JavascriptInterface;
-import android.webkit.WebChromeClient;
+import android.util.Log;
+import android.webkit.WebResourceRequest;
 import android.webkit.WebResourceResponse;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import com.jaehyun.businesscard.util.AndroidBridge;
-import com.jaehyun.businesscard.util.SelfSigningClientBuilder;
+import com.jaehyun.businesscard.util.SelfSigningHelper;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+
+import javax.net.ssl.HttpsURLConnection;
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 public class WebViewActivity extends AppCompatActivity {
-    private OkHttpClient.Builder okHttpBuilder = new OkHttpClient.Builder();
-    private OkHttpClient okHttp = null;
+    private OkHttpClient.Builder builder = null;
     WebView webView = null;
+    SelfSigningHelper helper = null;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_web_view);
-        okHttp = SelfSigningClientBuilder.addBuilder(this, okHttpBuilder).build();
+
+        builder = new OkHttpClient.Builder();
+        helper = SelfSigningHelper.getInstance();
+        helper.setSSLOkHttp(builder,"10.0.2.2");
 
         webView = findViewById(R.id.webView);
         initWebView();
@@ -44,14 +54,36 @@ public class WebViewActivity extends AppCompatActivity {
 
 
 //        webView.setWebChromeClient(new WebChromeClient());
-        webView.setWebViewClient(new WebViewClient());
         webView.setWebViewClient(new WebViewClient(){
 
+
+            @RequiresApi(api = Build.VERSION_CODES.LOLLIPOP)
+            @Override
+            public WebResourceResponse shouldInterceptRequest(WebView view, WebResourceRequest request){
+                URL url;
+                Response response;
+                Request newRequest;
+                try {
+                    url = new URL(request.getUrl().toString());
+                    newRequest = new Request.Builder().url(url).build();
+                    response = builder.build().newCall(newRequest).execute();
+                    if (response.body() != null) {
+                        return new WebResourceResponse("","",response.body().byteStream());
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                return null;
+            }
+
+            @Deprecated
             @Override
             public WebResourceResponse shouldInterceptRequest(WebView view, String url) {
+                Log.d("test","deprecate");
                 Request okHttpRequest = new Request.Builder().url(url).build();
                 try {
-                    Response response = okHttp.newCall(okHttpRequest).execute();
+
+                    Response response = builder.build().newCall(okHttpRequest).execute();
                     return new WebResourceResponse("","",response.body().byteStream());
                 } catch (IOException e) {
                     e.printStackTrace();

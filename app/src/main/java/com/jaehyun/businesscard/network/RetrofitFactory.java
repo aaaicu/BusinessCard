@@ -1,10 +1,13 @@
 package com.jaehyun.businesscard.network;
 
 import android.content.Context;
+import android.util.Log;
 
-import com.jaehyun.businesscard.util.SelfSigningClientBuilder;
+import com.jaehyun.businesscard.util.SelfSigningHelper;
 
 import java.util.concurrent.TimeUnit;
+
+import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import retrofit2.Retrofit;
@@ -20,16 +23,18 @@ public class RetrofitFactory {
         Retrofit retrofit = new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
-                .client(createOkHttpClient(context))
+                .client(createOkHttpClient())
                 .build();
         return retrofit;
     }
 
-    private static OkHttpClient createOkHttpClient(Context context) {
+    private static OkHttpClient createOkHttpClient() {
+        SelfSigningHelper helper = SelfSigningHelper.getInstance();
+
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(180, TimeUnit.SECONDS);
         builder.readTimeout(180, TimeUnit.SECONDS);
-        builder = SelfSigningClientBuilder.addBuilder(context,builder);
+        helper.setSSLOkHttp( builder,"10.0.2.2");
 
         return builder.build();
     }

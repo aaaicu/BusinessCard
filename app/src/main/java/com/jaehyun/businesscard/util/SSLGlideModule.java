@@ -14,6 +14,8 @@ import com.jaehyun.businesscard.BusinessCardApplication;
 
 import java.io.InputStream;
 
+import javax.net.ssl.X509TrustManager;
+
 import okhttp3.OkHttpClient;
 
 @GlideModule
@@ -22,9 +24,10 @@ public class SSLGlideModule extends AppGlideModule {
     public void registerComponents(@NonNull Context context, @NonNull Glide glide, @NonNull Registry registry) {
         super.registerComponents(context, glide, registry);
 
-        OkHttpClient okHttpClient=SelfSigningClientBuilder.addBuilder(BusinessCardApplication.getAppContext(),new OkHttpClient.Builder()).build();
-//        OkHttpClient okHttpClient=new OkHttpClient();
+        SelfSigningHelper helper = SelfSigningHelper.getInstance();
+        OkHttpClient.Builder builder = new OkHttpClient.Builder();
+        helper.setSSLOkHttp( builder,"10.0.2.2");
 
-        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(okHttpClient));
+        registry.replace(GlideUrl.class, InputStream.class, new OkHttpUrlLoader.Factory(builder.build()));
     }
 }
