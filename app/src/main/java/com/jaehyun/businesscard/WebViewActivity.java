@@ -16,11 +16,8 @@ import com.jaehyun.businesscard.util.AndroidBridge;
 import com.jaehyun.businesscard.util.SelfSigningHelper;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 
-import javax.net.ssl.HttpsURLConnection;
-import javax.net.ssl.X509TrustManager;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;

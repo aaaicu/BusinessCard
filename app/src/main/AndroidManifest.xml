@@ -15,7 +15,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".WebViewActivity"></activity>
+
+        <activity android:name=".WebViewActivity"/>
         <activity android:name=".BusinessCardActivity" /> <!-- android:screenOrientation="landscape"></activity> -->
         <activity android:name=".BusinessCardEditActivity" />
         <activity android:name=".MainActivity">
