@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">BusinessCard</string>
+    <string name="tel">T. </string>
+    <string name="mobile">M. </string>
+    <string name="fax">F. </string>
+    <string name="email">E. </string>
 </resources>
