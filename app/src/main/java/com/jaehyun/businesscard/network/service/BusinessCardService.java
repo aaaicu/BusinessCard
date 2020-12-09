@@ -6,6 +6,8 @@ import com.jaehyun.businesscard.model.BusinessCardModel;
 import com.jaehyun.businesscard.model.SendBusinessCardModel;
 
 import okhttp3.MultipartBody;
+import okhttp3.Response;
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.Field;
@@ -32,4 +34,7 @@ public interface BusinessCardService {
     );
     @HTTP(method = "POST", path = "/send/businessCard", hasBody = true)
     Call<Void> sendBusinessCard(@Body SendBusinessCardModel requestModel);
+
+    @GET("/test/session")
+    Call<ResponseBody> testSession();
 }
