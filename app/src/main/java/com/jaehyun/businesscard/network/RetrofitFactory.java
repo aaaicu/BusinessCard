@@ -4,25 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.util.Log;
-import android.webkit.CookieManager;
 
 import com.jaehyun.businesscard.BusinessCardApplication;
-import com.jaehyun.businesscard.util.Config;
-import com.jaehyun.businesscard.util.SelfSigningHelper;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import javax.net.ssl.X509TrustManager;
-
-import okhttp3.Cookie;
-import okhttp3.CookieJar;
-import okhttp3.HttpUrl;
-import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
@@ -47,12 +35,12 @@ public class RetrofitFactory {
 
     private static OkHttpClient createOkHttpClient() {
 
-        SelfSigningHelper helper = SelfSigningHelper.getInstance();
+//        SelfSigningHelper helper = SelfSigningHelper.getInstance();
 
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.connectTimeout(180, TimeUnit.SECONDS);
         builder.readTimeout(180, TimeUnit.SECONDS);
-        helper.setSSLOkHttp(builder, "10.0.2.2");
+//        helper.setSSLOkHttp(builder, "10.0.2.2");
 
 
 //        String session = sp.getString("session","");

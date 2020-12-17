@@ -16,10 +16,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".WebViewActivity"/>
-        <activity android:name=".BusinessCardActivity" /> <!-- android:screenOrientation="landscape"></activity> -->
-        <activity android:name=".BusinessCardEditActivity" />
-        <activity android:name=".MainActivity">
+        <activity android:name=".ui.webview.WebViewActivity"/>
+        <activity android:name=".ui.businesscard.BusinessCardActivity" /> <!-- android:screenOrientation="landscape"></activity> -->
+        <activity android:name=".ui.edit.BusinessCardEditActivity" />
+        <activity android:name=".ui.main.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

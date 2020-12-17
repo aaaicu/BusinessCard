@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".ui.main.MainActivity">
 
     <Button
         android:id="@+id/buttonCreateBusinessCard"
@@ -50,7 +50,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
-        android:onClick="requestBusinessCard"
+        android:onClick="clickRequestBusinessCard"
         android:text="명함 제작(서버연동)"
         app:layout_constraintStart_toEndOf="@+id/editTextEmpId"
         app:layout_constraintTop_toTopOf="@+id/editTextEmpId" />
@@ -78,7 +78,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
-        android:onClick="openWebViewActivity"
+        android:onClick="clickWebViewActivity"
         android:text="웹뷰 테스트"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/divider2" />
@@ -88,7 +88,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:onClick="sessionTest"
+        android:onClick="clickSessionTest"
         android:text="세션테스트"
         app:layout_constraintStart_toStartOf="@+id/buttonWebViewActivity"
         app:layout_constraintTop_toBottomOf="@+id/buttonWebViewActivity" />

@@ -4,9 +4,8 @@ import android.app.Application;
 import android.content.Context;
 import android.util.Log;
 
-import androidx.room.RoomDatabase;
-
-import com.jaehyun.businesscard.database.BusinessDB;
+import com.jaehyun.businesscard.data.local.BusinessDB;
+import com.jaehyun.businesscard.util.AppExecutors;
 
 public class BusinessCardApplication extends Application {
 
