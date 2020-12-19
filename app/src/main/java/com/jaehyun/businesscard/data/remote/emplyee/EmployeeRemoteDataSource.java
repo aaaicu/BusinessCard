@@ -10,8 +10,6 @@ import java.io.File;
 import retrofit2.Call;
 
 public interface EmployeeRemoteDataSource{
-    EmployeeRemoteDataSource getInstance();
-
     Call<BusinessCardModel> getBusinessCardInfo(Context context, String seq);
 
     Call<String> hasBusinessCard(Context context, String seq);

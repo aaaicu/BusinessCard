@@ -13,6 +13,7 @@ import okhttp3.ResponseBody;
 import retrofit2.Callback;
 
 public interface BusinessCardRepository {
+
     void setEmployeeDataSource(EmployeeRemoteDataSource dataSource);
 
     void setSessionDataSource(SessionRemoteDataSource dataSource);

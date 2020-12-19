@@ -10,6 +10,7 @@ import com.jaehyun.businesscard.data.repository.BusinessCardRepository;
 import com.jaehyun.businesscard.ui.businesscard.BusinessCardActivity;
 import com.jaehyun.businesscard.data.model.BusinessCardModel;
 import com.jaehyun.businesscard.data.remote.emplyee.EmployeeRemoteDataSourceImpl;
+import com.jaehyun.businesscard.util.Injection;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -17,8 +18,7 @@ import retrofit2.Response;
 
 public class AndroidBridge implements WebViewContract.Presenter {
     Context mContext;
-    // datasource 셋팅하는거 필요
-    BusinessCardRepository repository;
+    BusinessCardRepository repository = Injection.BUSINESS_CARD_REPOSITORY;;
 
     public AndroidBridge(Context context) {
         mContext = context;

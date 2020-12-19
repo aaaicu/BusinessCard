@@ -17,8 +17,7 @@ public class SessionRemoteDataSourceImpl implements SessionRemoteDataSource {
         public static final SessionRemoteDataSourceImpl INSTANCE = new SessionRemoteDataSourceImpl();
     }
 
-    @Override
-    public SessionRemoteDataSource getInstance() {
+    public static SessionRemoteDataSource getInstance() {
         return SessionDataSourceHolder.INSTANCE;
     }
 

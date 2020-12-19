@@ -23,8 +23,7 @@ public class EmployeeRemoteDataSourceImpl implements EmployeeRemoteDataSource {
         public static final EmployeeRemoteDataSourceImpl INSTANCE = new EmployeeRemoteDataSourceImpl();
     }
 
-    @Override
-    public EmployeeRemoteDataSource getInstance() {
+    public static EmployeeRemoteDataSource getInstance() {
         return EmployeeDataSourceHolder.INSTANCE;
     }
 

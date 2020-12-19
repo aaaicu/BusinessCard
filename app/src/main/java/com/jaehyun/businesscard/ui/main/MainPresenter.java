@@ -12,6 +12,7 @@ import com.jaehyun.businesscard.BusinessCardApplication;
 import com.jaehyun.businesscard.data.model.BusinessCardModel;
 import com.jaehyun.businesscard.data.repository.BusinessCardRepository;
 import com.jaehyun.businesscard.ui.base.BasePresenter;
+import com.jaehyun.businesscard.util.Injection;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -22,8 +23,7 @@ import static android.content.Context.MODE_PRIVATE;
 
 public class MainPresenter extends BasePresenter implements MainContract.Presenter {
 
-    // datasource 셋팅하는거 필요
-    BusinessCardRepository repository;
+    BusinessCardRepository repository = Injection.BUSINESS_CARD_REPOSITORY;
 
     @Override
     public void requestBusinessCard(String id) {

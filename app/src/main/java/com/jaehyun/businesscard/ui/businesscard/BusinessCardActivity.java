@@ -1,18 +1,9 @@
 package com.jaehyun.businesscard.ui.businesscard;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
-import androidx.core.content.FileProvider;
-import androidx.lifecycle.MutableLiveData;
-
 import android.Manifest;
-import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.drawable.BitmapDrawable;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,23 +11,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.lifecycle.MutableLiveData;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.jaehyun.businesscard.BusinessCardApplication;
 import com.jaehyun.businesscard.R;
+import com.jaehyun.businesscard.customview.BusinessCardView;
 import com.jaehyun.businesscard.data.local.BusinessCardEntity;
-import com.jaehyun.businesscard.data.model.SendBusinessCardModel;
-import com.jaehyun.businesscard.data.remote.emplyee.EmployeeRemoteDataSourceImpl;
 import com.jaehyun.businesscard.data.model.BusinessCardModel;
+import com.jaehyun.businesscard.data.model.SendBusinessCardModel;
 import com.jaehyun.businesscard.ui.base.BaseActivity;
 import com.jaehyun.businesscard.util.Config;
-import com.jaehyun.businesscard.customview.BusinessCardView;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -49,7 +40,6 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
     BusinessCardView businessCardView = null;
     ImageView imageView = null;
     MutableLiveData<BusinessCardEntity> data = null;
-    Bitmap bitmap = null;
     File tempFile = null;
 
     final int REQUEST_IMG_SEND = 88;
@@ -132,14 +122,14 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
         data = businessCardViewModel.getEntity();
         data.observe(this, e -> {
             businessCardView.setBusinessCardData(e);
-            Bitmap bitmap = getBitmapFromView(businessCardView);
+            Bitmap bitmap = presenter.getBitmapFromView(businessCardView);
 
             // 서버로 이미지 전달
             if (getIntent().getStringExtra("REQ") != null) {
                 if (getIntent().getStringExtra("REQ").equals("server")) {
                     Log.d("test", "서버로 이미지 저장 요청");
                     Log.d("test", getIntent().getStringExtra("ID") + "");
-                    File temp = saveBitmapToPng(bitmap, "BusinessCard");
+                    File temp = presenter.saveBitmapToPng(bitmap, "BusinessCard");
 
                     presenter.saveBusinessCardImage(this,getIntent().getStringExtra("ID"), temp, new Callback<String>() {
                         @Override
@@ -194,65 +184,23 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
         }
     }
 
-    public Bitmap getBitmapFromView(View v) {
-        if (bitmap == null) {
-            View temp = findViewById(R.id.businessCard);
-            bitmap = Bitmap.createBitmap(temp.getMeasuredWidth(), temp.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-        }
-        Canvas canvas = new Canvas(bitmap);
-        v.draw(canvas);
-        return bitmap;
-    }
+//    public Bitmap getBitmapFromView(View v) {
+//        if (bitmap == null) {
+//            View temp = findViewById(R.id.businessCard);
+//            bitmap = Bitmap.createBitmap(temp.getMeasuredWidth(), temp.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
+//        }
+//        Canvas canvas = new Canvas(bitmap);
+//        v.draw(canvas);
+//        return bitmap;
+//    }
 
-    private File saveBitmapToPng(Bitmap bitmap, String name) {
 
-        try {
-            File tempDir = getCacheDir();
-            tempFile = File.createTempFile("BUSINESS_CARD_PNG_", ".png", tempDir);
-            FileOutputStream out = new FileOutputStream(tempFile);
-            bitmap.compress(Bitmap.CompressFormat.PNG, 100, out);
-            Log.d("test", tempFile.getAbsolutePath() + "이미지 다운로드");
-            out.close();
-
-        } catch (FileNotFoundException e) {
-            Log.e("test", "FileNotFoundException : " + e.getMessage());
-        } catch (IOException e) {
-            Log.e("test", "IOException : " + e.getMessage());
-        }
-        return tempFile;
-    }
-
+    @Override
     public void sendBusinessCard(View view) {
-        if (imageView != null) {
-            saveBitmapToPng(((BitmapDrawable) imageView.getDrawable()).getBitmap(), "BusinessCard");
-            sendMMS(getUri(tempFile));
-        }
+        presenter.sendBusinessCard(tempFile);
     }
 
-    private void sendMMS(Uri uri) {
-
-        try {
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.setType("image/*");
-            intent.putExtra(Intent.EXTRA_STREAM, uri);
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-            startActivityForResult(Intent.createChooser(intent, "send"), REQUEST_IMG_SEND);
-        } catch (ActivityNotFoundException e) {
-            Toast.makeText(getApplicationContext(), "실패", Toast.LENGTH_SHORT).show();
-        }
-    }
-
-    private Uri getUri(File file) {
-        Uri uri = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {// API 24 이상 일경우..
-            uri = FileProvider.getUriForFile(this,
-                    getApplicationContext().getPackageName() + ".fileprovider", file);
-        } else {// API 24 미만 일경우..
-            uri = Uri.fromFile(file);
-        }
-        return uri;
-    }
-
+    @Override
     public void checkPermission() {
         //현재 안드로이드 버전이 6.0미만이면 메서드를 종료한다.
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M)
@@ -276,7 +224,7 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
         model.setSender(Integer.parseInt(getIntent().getStringExtra("ID")));
         model.setSendType("kakao");
 
-        presenter.sendBusinessCard(getApplicationContext(), model, new Callback<Void>() {
+        presenter.sendBusinessCard(model, new Callback<Void>() {
             @Override
             public void onResponse(Call<Void> call, Response<Void> response) {
                 Toast.makeText(getApplicationContext(), "메시지 요청 완료", Toast.LENGTH_SHORT).show();

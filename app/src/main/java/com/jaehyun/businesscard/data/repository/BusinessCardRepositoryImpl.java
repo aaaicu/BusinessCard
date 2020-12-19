@@ -1,6 +1,7 @@
 package com.jaehyun.businesscard.data.repository;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -19,7 +20,7 @@ public class BusinessCardRepositoryImpl implements BusinessCardRepository {
     EmployeeRemoteDataSource employeeDataSource = null;
     SessionRemoteDataSource sessionDataSource = null;
 
-    public BusinessCardRepositoryImpl() {
+    private BusinessCardRepositoryImpl() {
         super();
     }
 
@@ -31,8 +32,8 @@ public class BusinessCardRepositoryImpl implements BusinessCardRepository {
 
     @Override
     public void setEmployeeDataSource(@NonNull EmployeeRemoteDataSource dataSource) {
-        if (employeeDataSource != null) {
-            this.employeeDataSource = dataSource;
+        if (employeeDataSource == null) {
+            employeeDataSource = dataSource;
         } else {
             try {
                 throw new Exception("EmployeeRemoteDataSource 없음");
@@ -44,8 +45,8 @@ public class BusinessCardRepositoryImpl implements BusinessCardRepository {
 
     @Override
     public void setSessionDataSource(SessionRemoteDataSource dataSource) {
-        if (sessionDataSource != null) {
-            this.sessionDataSource = dataSource;
+        if (sessionDataSource == null) {
+            sessionDataSource = dataSource;
         } else {
             try {
                 throw new Exception("SessionRemoteDataSource 없음");
@@ -59,26 +60,26 @@ public class BusinessCardRepositoryImpl implements BusinessCardRepository {
     @Override
     public void requestBusinessCard(String id, Callback<BusinessCardModel> callback) {
         checkDataSource(employeeDataSource == null, "EmployeeRemoteDataSource 없음");
-
-        employeeDataSource.getInstance().getBusinessCardInfo(BusinessCardApplication.getAppContext(), id).enqueue(callback);
+        Log.d("test",employeeDataSource+"");
+        employeeDataSource.getBusinessCardInfo(BusinessCardApplication.getAppContext(), id).enqueue(callback);
     }
 
     @Override
     public void sessionTest(Context context, Callback<ResponseBody> callback) {
         checkDataSource(sessionDataSource == null, "SessionDataSource 없음");
-        sessionDataSource.getInstance().sessionTest(context).enqueue(callback);
+        sessionDataSource.sessionTest(context).enqueue(callback);
     }
 
     @Override
     public void hasBusinessCard(Context context, String seq, Callback<String> callback) {
         checkDataSource(employeeDataSource == null, "EmployeeRemoteDataSource 없음");
-        employeeDataSource.getInstance().hasBusinessCard(context, seq).enqueue(callback);
+        employeeDataSource.hasBusinessCard(context, seq).enqueue(callback);
     }
 
     @Override
     public void getBusinessCardInfo(Context context, String seq, Callback<BusinessCardModel> callback) {
         checkDataSource(employeeDataSource == null, "EmployeeRemoteDataSource 없음");
-        employeeDataSource.getInstance().getBusinessCardInfo(context, seq).enqueue(callback);
+        employeeDataSource.getBusinessCardInfo(context, seq).enqueue(callback);
     }
 
     @Override
