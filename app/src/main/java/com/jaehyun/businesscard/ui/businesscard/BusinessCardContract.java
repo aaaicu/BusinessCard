@@ -1,6 +1,7 @@
 package com.jaehyun.businesscard.ui.businesscard;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
@@ -17,6 +18,8 @@ public interface BusinessCardContract {
         void checkPermission();
 
         void sendBusinessCard(android.view.View view);
+
+        void sendMMS(Intent intent);
     }
 
     interface Presenter {
@@ -32,10 +35,13 @@ public interface BusinessCardContract {
 
         File saveBitmapToPng(Bitmap bitmap, String name);
 
-        void sendBusinessCard(File tempFile);
+        void sendBusinessCard();
 
         void sendMMS(Uri uri);
 
-        public Uri getUri(File file);
+        Uri getUri(File file);
+
+        void deleteTempFile();
+
     }
 }

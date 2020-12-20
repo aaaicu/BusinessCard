@@ -1,9 +1,12 @@
 package com.jaehyun.businesscard.ui.businesscard;
 
 import android.Manifest;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.content.pm.ResolveInfo;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
@@ -13,6 +16,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.FileProvider;
 import androidx.lifecycle.MutableLiveData;
 
 import com.bumptech.glide.Glide;
@@ -28,6 +32,7 @@ import com.jaehyun.businesscard.ui.base.BaseActivity;
 import com.jaehyun.businesscard.util.Config;
 
 import java.io.File;
+import java.util.List;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -40,7 +45,6 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
     BusinessCardView businessCardView = null;
     ImageView imageView = null;
     MutableLiveData<BusinessCardEntity> data = null;
-    File tempFile = null;
 
     final int REQUEST_IMG_SEND = 88;
     String[] permission_list = {
@@ -50,16 +54,17 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_business_card);
+        imageView = findViewById(R.id.imageView);
+        businessCardView = findViewById(R.id.businessCardView);
+
         presenter = new BusinessPresenter();
         presenter.setView(this);
 
         checkPermission();
-
-        imageView = findViewById(R.id.imageView);
-        businessCardView = findViewById(R.id.businessCardView);
-
         init();
 
         BusinessCardEntity entity = new BusinessCardEntity();
@@ -131,7 +136,7 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
                     Log.d("test", getIntent().getStringExtra("ID") + "");
                     File temp = presenter.saveBitmapToPng(bitmap, "BusinessCard");
 
-                    presenter.saveBusinessCardImage(this,getIntent().getStringExtra("ID"), temp, new Callback<String>() {
+                    presenter.saveBusinessCardImage(this, getIntent().getStringExtra("ID"), temp, new Callback<String>() {
                         @Override
                         public void onResponse(Call<String> call, Response<String> response) {
                             temp.delete();
@@ -142,7 +147,7 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
                         public void onFailure(Call<String> call, Throwable t) {
                             temp.delete();
                         }
-                    } );
+                    });
                 }
             }
         });
@@ -180,24 +185,13 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         if (requestCode == REQUEST_IMG_SEND) {
-            tempFile.deleteOnExit();
+            presenter.deleteTempFile();
         }
     }
 
-//    public Bitmap getBitmapFromView(View v) {
-//        if (bitmap == null) {
-//            View temp = findViewById(R.id.businessCard);
-//            bitmap = Bitmap.createBitmap(temp.getMeasuredWidth(), temp.getMeasuredHeight(), Bitmap.Config.ARGB_8888);
-//        }
-//        Canvas canvas = new Canvas(bitmap);
-//        v.draw(canvas);
-//        return bitmap;
-//    }
-
-
     @Override
     public void sendBusinessCard(View view) {
-        presenter.sendBusinessCard(tempFile);
+        presenter.sendBusinessCard();
     }
 
     @Override
@@ -237,6 +231,11 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
         });
     }
 
+    @Override
+    public void sendMMS(Intent chooser) {
+
+        startActivityForResult(chooser, REQUEST_IMG_SEND);
+    }
 
 //    private void observeRoomDB(int empId){
 //        BusinessCardApplication.getDatabase()

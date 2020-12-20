@@ -6,6 +6,7 @@ public interface BaseContract {
     interface View {
         void showToast(String msg);
         void openActivity(Intent intent);
+
     }
 
     interface Presenter{

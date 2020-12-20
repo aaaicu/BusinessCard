@@ -69,8 +69,8 @@ public class BusinessCardView extends LinearLayout {
         position.setText(e.getPosition());
         address.setText(e.getAddress());
         fax.setText(e.getFax());
-        removeView(card);
-        addView(card);
+//        removeView(card);
+//        addView(card);
         return card;
     }
 }
