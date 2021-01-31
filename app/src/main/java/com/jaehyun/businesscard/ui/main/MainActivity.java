@@ -32,11 +32,7 @@ public class MainActivity extends BaseActivity implements MainContract.View {
 
     @Override
     public void clickRequestBusinessCard(View view) {
-        if (!editTextId.getText().toString().isEmpty()) {
-            presenter.requestBusinessCard(editTextId.getText().toString());
-        } else {
-            showToast("사번을 입력하세요");
-        }
+        presenter.requestBusinessCard(editTextId.getText().toString());
     }
 
     @Override

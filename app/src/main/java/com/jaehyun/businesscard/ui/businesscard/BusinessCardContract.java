@@ -6,6 +6,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.view.View;
 
+import com.jaehyun.businesscard.data.local.BusinessCardEntity;
 import com.jaehyun.businesscard.data.model.BusinessCardModel;
 import com.jaehyun.businesscard.data.model.SendBusinessCardModel;
 
@@ -15,33 +16,30 @@ import retrofit2.Callback;
 
 public interface BusinessCardContract {
     interface View {
-        void checkPermission();
+
+        void changeBusinessCardView(BusinessCardEntity entity);
 
         void sendBusinessCard(android.view.View view);
 
         void sendMMS(Intent intent);
+
+        void checkPermission();
     }
 
     interface Presenter {
-        void hasBusinessCard(Context context, String seq, Callback<String> callback);
+        void getChangeEmpData(String empId);
 
-        void getBusinessCardInfo(Context context, String id, Callback<BusinessCardModel> callback);
+        Bitmap getBusinessCardBitmap();
 
         void saveBusinessCardImage(Context context, String id, File file, Callback<String> callback);
 
-        void sendBusinessCard(SendBusinessCardModel model, Callback<Void> callback);
-
-        Bitmap getBitmapFromView(android.view.View v);
-
-        File saveBitmapToPng(Bitmap bitmap, String name);
+        void sendBusinessCard(SendBusinessCardModel model);
 
         void sendBusinessCard();
 
-        void sendMMS(Uri uri);
+        void shareMMS(Uri uri);
 
-        Uri getUri(File file);
-
-        void deleteTempFile();
+        void deleteTempBusinessCardFile();
 
     }
 }

@@ -14,6 +14,7 @@ public interface MainContract {
     interface Presenter {
         void requestBusinessCard(String id);
 
+        // 삭제무관
         void requestSession(Context context);
     }
 }

@@ -27,32 +27,37 @@ public class MainPresenter extends BasePresenter implements MainContract.Present
 
     @Override
     public void requestBusinessCard(String id) {
-        // 데이터 요청
-        repository.requestBusinessCard(id, new Callback<BusinessCardModel>() {
-            @Override
-            public void onResponse(Call<BusinessCardModel> call, Response<BusinessCardModel> response) {
-                mView.showToast("사원정보가 조회되었습니다.");
+        if(id.isEmpty()){
+            mView.showToast("사번을 입력하세요");
+        }else {
+            // 데이터 요청
+            repository.requestBusinessCard(id, new Callback<BusinessCardModel>() {
+                @Override
+                public void onResponse(Call<BusinessCardModel> call, Response<BusinessCardModel> response) {
+                    mView.showToast("사원정보가 조회되었습니다.");
 
-                BusinessCardModel model = response.body();
-                if (model == null) {
-                    mView.showToast("해당 사번 없음");
-                } else {
-                    Log.d("test", "세션 ID " + model.toString());
-                    Intent intent = new Intent(BusinessCardApplication.getAppContext(), BusinessCardActivity.class);
-                    intent.putExtra("REQ", "server");
-                    intent.putExtra("ID", id);
-                    mView.openActivity(intent);
+                    BusinessCardModel model = response.body();
+                    if (model == null) {
+                        mView.showToast("해당 사번 없음");
+                    } else {
+                        Log.d("test", "세션 ID " + model.toString());
+                        Intent intent = new Intent(BusinessCardApplication.getAppContext(), BusinessCardActivity.class);
+                        intent.putExtra("REQ", "server");
+                        intent.putExtra("ID", id);
+                        mView.openActivity(intent);
+                    }
                 }
-            }
 
-            @Override
-            public void onFailure(Call<BusinessCardModel> call, Throwable t) {
-                mView.showToast("사원정보 조회 실패");
-                Log.e("test", t.toString());
-            }
-        });
+                @Override
+                public void onFailure(Call<BusinessCardModel> call, Throwable t) {
+                    mView.showToast("사원정보 조회 실패");
+                    Log.e("test", t.toString());
+                }
+            });
+        }
     }
 
+    //임시 메소드(테스트용도) 삭제 무관
     @Override
     public void requestSession(Context context) {
 
