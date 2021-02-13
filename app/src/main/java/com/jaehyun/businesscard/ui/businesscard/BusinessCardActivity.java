@@ -25,6 +25,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.jaehyun.businesscard.BusinessCardApplication;
 import com.jaehyun.businesscard.R;
 import com.jaehyun.businesscard.customview.BusinessCardView;
+import com.jaehyun.businesscard.customview.VisibilityOptionView;
 import com.jaehyun.businesscard.data.local.BusinessCardEntity;
 import com.jaehyun.businesscard.data.model.BusinessCardModel;
 import com.jaehyun.businesscard.data.model.SendBusinessCardModel;
@@ -46,6 +47,7 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
 
     BusinessCardViewModel businessCardViewModel;
     BusinessCardView businessCardView = null;
+    VisibilityOptionView visibilityOptionView = null;
     ImageView imageView = null;
 
     String[] permission_list = {
@@ -71,6 +73,9 @@ public class BusinessCardActivity extends BaseActivity implements BusinessCardCo
         imageView = findViewById(R.id.imageView);
         businessCardView = findViewById(R.id.businessCardView);
         businessCardViewModel = new ViewModelProvider(this).get(BusinessCardViewModel.class);
+
+        visibilityOptionView = findViewById(R.id.visibility_option);
+        visibilityOptionView.setBusinessCardView(businessCardView);
 
         presenter = new BusinessPresenter();
         presenter.setView(this);

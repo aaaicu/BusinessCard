@@ -4,6 +4,7 @@ import android.content.Context;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.CheckBox;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -11,6 +12,9 @@ import androidx.annotation.Nullable;
 
 import com.jaehyun.businesscard.R;
 import com.jaehyun.businesscard.data.local.BusinessCardEntity;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class BusinessCardView extends LinearLayout {
     LinearLayout card = null;
@@ -23,6 +27,8 @@ public class BusinessCardView extends LinearLayout {
     TextView position = null;
     TextView address = null;
     TextView fax = null;
+
+    List<View> viewList = new ArrayList<>();
 
     public BusinessCardView(Context context) {
         super(context);
@@ -47,14 +53,30 @@ public class BusinessCardView extends LinearLayout {
         LayoutInflater li = (LayoutInflater) getContext().getSystemService(infService);
         card = (LinearLayout) li.inflate(R.layout.view_business_card, this, false);
 
+
         name = card.findViewById(R.id.textViewName);
+        viewList.add(name);
+
         email = card.findViewById(R.id.textViewEmail);
+        viewList.add(email);
+
         tel = card.findViewById(R.id.textViewTel);
+        viewList.add(tel);
+
         mobile = card.findViewById(R.id.textViewMobile);
+        viewList.add(mobile);
+
         team = card.findViewById(R.id.textViewTeamName);
+        viewList.add(team);
+
         position = card.findViewById(R.id.textViewPosition);
+        viewList.add(position);
+
         address = card.findViewById(R.id.textViewCompanyAddress);
+        viewList.add(address);
+
         fax = card.findViewById(R.id.textViewFax);
+        viewList.add(fax);
 
         addView(card);
     }
@@ -72,5 +94,9 @@ public class BusinessCardView extends LinearLayout {
 //        removeView(card);
 //        addView(card);
         return card;
+    }
+
+    public List<View> getViewList() {
+        return viewList;
     }
 }
